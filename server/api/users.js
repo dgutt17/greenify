@@ -1,15 +1,18 @@
 const router = require('express').Router()
+const axios = require('axios')
 module.exports = router
 
-router.get('/', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
-      attributes: ['id', 'email']
+    console.log('req.body: ', req.body)
+    let {email, password} = req.body
+    response = await axios.post('http://localhost:3000/users', {
+      email,
+      password
     })
-    res.json(users)
+    user = response.data
+    console.log('response: ', user)
+    res.json(user)
   } catch (err) {
     next(err)
   }
